@@ -1,5 +1,4 @@
 .. raw:: html
-
    <!--
    Copyright 2015-2016 F5 Networks Inc.
 
@@ -26,7 +25,9 @@ Introduction
 
 This repository provides the foundation for working with F5 devices and Ansible.
 The architecture of the modules makes inherent use of the BIG-IP SOAP and REST
-APIs as well as the tmsh API where required.
+APIs as well as the tmsh API where required. It was orginally created by Tim Rupp
+for F5 and made available on F5's DevCentral Github Repo.  Please refer to that 
+repo for the latest, unaltered version of these files. 
 
 This repository is an **incubator** for Ansible modules that we would like to
 have upstreamed over the course of time. The modules in this repository **may be
