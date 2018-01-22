@@ -1,0 +1,27 @@
+---
+
+pool_name: foo.pool
+pool_lb_method: round-robin
+pool_reselect_tries: 10
+pool_lb_method_alt:
+  - dynamic-ratio-member
+  - dynamic-ratio-node
+  - fastest-app-response
+  - fastest-node
+  - least-connections-member
+  - least-connections-node
+  - least-sessions
+  - observed-member
+  - observed-node
+  - predictive-member
+  - predictive-node
+  - ratio-least-connections-member
+  - ratio-least-connections-node
+  - ratio-member
+  - ratio-node
+  - ratio-session
+  - round-robin
+  - weighted-least-connections-member
+  - weighted-least-connections-node
+pool_description_1: my description
+pool_description_2: my other description

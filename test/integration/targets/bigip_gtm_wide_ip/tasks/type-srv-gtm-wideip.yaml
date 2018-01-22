@@ -1,0 +1,171 @@
+---
+
+- name: Create wide IP - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Create wide IP - Type SRV
+  assert:
+    that:
+      - result is changed
+
+- name: Create wide IP - Type SRV - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Create wide IP - Type SRV - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - ratio - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method2 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - ratio - Type SRV
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - ratio - Type SRV - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method2 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - ratio - Type SRV - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - topology - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method3 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - topology - Type SRV
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - topology - Type SRV - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method3 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - topology - Type SRV - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - global availability - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method4 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - global availability - Type SRV
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - global availability - Type SRV - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method4 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - global availability - Type SRV - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 1 - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method1 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 1 - Type SRV
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 2 - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method2 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 2 - Type SRV
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 3 - Type SRV
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method3 }}"
+    state: present
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 3 - Type SRV
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete wide IP - Type SRV
+  bigip_gtm_wide_ip:
+    state: absent
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Delete wide IP - Type SRV
+  assert:
+    that:
+      - result is changed
+
+- name: Delete wide IP - Type SRV - Idempotent check
+  bigip_gtm_wide_ip:
+    state: absent
+    type: srv
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Delete wide IP - Type SRV - Idempotent check
+  assert:
+    that:
+      - result is not changed

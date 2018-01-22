@@ -1,0 +1,153 @@
+---
+
+# We use clouds.yaml for both the CLI and Ansible configurations
+#
+# @see: https://docs.openstack.org/python-openstackclient/latest/configuration/index.html
+#
+
+version: '3.3'
+
+# Networks need to be overridden from their defaults to avoid address space
+# conflicts on site.
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 2.2.2.0/24
+services:
+  py2.7:
+    image: f5ansible/py2.7:devel
+    build:
+      context: ..
+      dockerfile: devtools/dockerfiles/Dockerfile-py2.7
+    command: /bin/bash
+    secrets:
+      - source: .gitconfig
+        target: .gitconfig
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py2.7-bare:
+    image: f5ansible/py2.7-bare:devel
+    build:
+      context: ..
+      dockerfile: devtools/dockerfiles/Dockerfile-py2.7-bare
+    command: /bin/bash
+    secrets:
+      - source: .gitconfig
+        target: .gitconfig
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py3.5:
+    image: f5ansible/py3.5:devel
+    build:
+      context: ..
+      dockerfile: devtools/dockerfiles/Dockerfile-py3.5
+    command: /bin/bash
+    secrets:
+      - source: .gitconfig
+        target: .gitconfig
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py3.5-bare:
+    image: f5ansible/py3.5-bare:devel
+    build:
+      context: ..
+      dockerfile: devtools/dockerfiles/Dockerfile-py3.5-bare
+    command: /bin/bash
+    secrets:
+      - source: .gitconfig
+        target: .gitconfig
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py3.6:
+    image: f5ansible/py3.6:devel
+    build:
+      context: ..
+      dockerfile: devtools/dockerfiles/Dockerfile-py3.6
+    command: /bin/bash
+    secrets:
+      - source: .gitconfig
+        target: .gitconfig
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py3.6-bare:
+    image: f5ansible/py3.6-bare:devel
+    build:
+      context: ..
+      dockerfile: devtools/dockerfiles/Dockerfile-py3.6-bare
+    command: /bin/bash
+    secrets:
+      - source: .gitconfig
+        target: .gitconfig
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+secrets:
+  .gitconfig:
+    file: ./secrets/gitconfig.secret

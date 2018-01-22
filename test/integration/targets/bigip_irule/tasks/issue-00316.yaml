@@ -1,0 +1,40 @@
+---
+
+- name: Issue 00316 - Add the iRule
+  bigip_irule:
+    name: issue-316
+    src: "{{ role_path }}/files/irule-01.tcl"
+    module: ltm
+    state: present
+  register: result
+
+- name: Issue 00316 - Assert Add the iRule
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00316 - Add the iRule - Idempotent check
+  bigip_irule:
+    name: issue-316
+    src: "{{ role_path }}/files/irule-01.tcl"
+    module: ltm
+    state: present
+  register: result
+
+- name: Issue 00316 - Assert Add the iRule - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00316 - Remove the iRule
+  bigip_irule:
+    name: issue-316
+    src: "{{ role_path }}/files/irule-01.tcl"
+    module: ltm
+    state: absent
+  register: result
+
+- name: Issue 00316 - Assert Remove the iRule
+  assert:
+    that:
+      - result is changed

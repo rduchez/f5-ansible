@@ -1,0 +1,58 @@
+---
+
+- import_tasks: setup.yaml
+
+- name: Create QKView, save it locally
+  bigip_qkview:
+    dest: "{{ qkview_path_local }}"
+
+- name: Check for existence
+  stat:
+    path: "{{ qkview_path_local }}"
+  register: st
+
+- name: Assert Check for existence
+  assert:
+    that:
+      - st.stat.exists|bool
+
+- name: Remove qkview file
+  file:
+    path: "{{ qkview_path_local }}"
+    state: absent
+
+- name: Create QKView with options, save it locally
+  bigip_qkview:
+    asm_request_log: yes
+    exclude_core: yes
+    exclude:
+      - audit
+      - secure
+    dest: "{{ qkview_path_local }}"
+
+- name: Check for existence
+  stat:
+    path: "{{ qkview_path_local }}"
+  register: st
+
+- name: Assert Check for existence
+  assert:
+    that:
+      - st.stat.exists|bool
+
+- name: Remove qkview file
+  file:
+    path: "{{ qkview_path_local }}"
+    state: absent
+
+#- name: The whole enchilada
+#  bigip_qkview:
+#      asm_request_log: yes
+#      max_file_size: 50000000
+#      complete_information: yes
+#      exclude_core: yes
+#      exclude:
+#          - audit
+#          - secure
+#          - bash_history
+#      dest: "/tmp/localhost.localdomain.qkview"

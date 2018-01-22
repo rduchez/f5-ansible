@@ -1,0 +1,44 @@
+---
+
+- name: Issue 00042 - Delete iRule with space at the end
+  bigip_irule:
+    module: ltm
+    name: issue-42
+    state: absent
+  register: result
+
+- name: Issue 00042 - Create iRule with space at the end
+  bigip_irule:
+    content: "when HTTP_REQUEST {HTTP::respond 200 content 'Good Request'}\n"
+    module: ltm
+    name: issue-42
+  register: result
+
+- name: Issue 00042 - Assert Create iRule with space at the end
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00042 - Create iRule with space at the end - Idempotent check
+  bigip_irule:
+    content: "when HTTP_REQUEST {HTTP::respond 200 content 'Good Request'}\n"
+    module: ltm
+    name: issue-42
+  register: result
+
+- name: Issue 00042 - Assert Create iRule with space at the end - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00042 - Delete iRule with space at the end
+  bigip_irule:
+    module: ltm
+    name: issue-42
+    state: absent
+  register: result
+
+- name: Issue 00042 - Assert Delete iRule with space at the end
+  assert:
+    that:
+      - result is changed

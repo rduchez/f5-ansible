@@ -1,0 +1,92 @@
+---
+
+- import_tasks: setup.yaml
+
+- name: Upload UCS file
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+  register: result
+
+- name: Assert Upload UCS file
+  assert:
+    that:
+      - result is changed
+
+- name: Upload UCS file - Idempotent check
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+  register: result
+
+- name: Assert Upload UCS file - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Force upload UCS file
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    force: yes
+  register: result
+
+- name: Assert Force upload UCS file
+  assert:
+    that:
+      - result is changed
+
+- name: Install an uploaded UCS file
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    state: installed
+  register: result
+
+- name: Assert Install an uploaded UCS file
+  assert:
+    that:
+      - result is changed
+
+- name: Install an uploaded UCS file again - expected not idempotent
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    state: installed
+  register: result
+
+- name: Assert Install an uploaded UCS file again - expected not idempotent
+  assert:
+    that:
+      - result is changed
+
+- name: Remove uploaded UCS file
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    state: absent
+  register: result
+
+- name: Assert Remove uploaded UCS file
+  assert:
+    that:
+      - result is changed
+
+- name: Remove uploaded UCS file - Idempotent check
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    state: absent
+  register: result
+
+- name: Assert Remove uploaded UCS file - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Install a UCS file, no initial upload
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    state: installed
+  register: result
+
+- name: Remove uploaded UCS file
+  bigip_ucs:
+    ucs: "{{ role_path }}/files/{{ ucs.path|basename }}.ucs"
+    state: absent
+  register: result
+
+- import_tasks: teardown.yaml

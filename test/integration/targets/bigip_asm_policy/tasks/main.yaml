@@ -1,0 +1,19 @@
+---
+
+- import_tasks: setup.yaml
+
+# This is being left here for later BIG-IP versions to ensure that they
+# can still import older policies.
+- import_tasks: v1-policy.yaml
+
+- import_tasks: v2-policy.yaml
+  when: system_info.product_information.product_version >= "13.0.0"
+
+- import_tasks: common.yaml
+- import_tasks: teardown.yaml
+
+- import_tasks: issue-00406.yaml
+  tags: issue-00406
+
+- import_tasks: issue-00562.yaml
+  tags: issue-00562

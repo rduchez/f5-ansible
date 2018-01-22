@@ -1,0 +1,29 @@
+---
+
+bigip_port: 443
+validate_certs: "no"
+
+nodes_table:
+- name: first
+  node_ip: 10.10.10.1
+  node_name: node-1
+- name: second
+  node_ip: 10.10.10.2
+  node_name: node-2
+
+pools_table:
+- name: first_web_pool_member
+  pool_node_name: node-1
+  pool_name: web
+- name: second_web_pool_member
+  pool_node_name: node-2
+  pool_name: web
+
+
+
+virtuals_table:
+- name: first_virtual
+  virtual_description: standard_server_01
+  virtual_destination: 172.16.10.108
+  virtual_name: vip-1
+  virtual_pool: web

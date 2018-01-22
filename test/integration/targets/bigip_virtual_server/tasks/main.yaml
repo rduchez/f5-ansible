@@ -1,0 +1,390 @@
+---
+
+- import_tasks: setup.yaml
+
+- name: Add virtual server
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+  register: result
+
+- name: Assert Add virtual server
+  assert:
+    that:
+      - result is changed
+
+- name: Add virtual server - Idempotent check
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+  register: result
+
+- name: Assert Add virtual server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Modify port of the Virtual Server
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    port: "{{ vs_port2 }}"
+    state: present
+  register: result
+
+- name: Assert Modify port of the Virtual Server
+  assert:
+    that:
+      - result is changed
+
+- name: Modify port of the Virtual Server - Idempotent check
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    port: "{{ vs_port2 }}"
+    state: present
+  register: result
+
+- name: Assert Modify port of the Virtual Server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete virtual server
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete virtual server
+  assert:
+    that:
+      - result is changed
+
+- name: Delete virtual server - Idempotent check
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete virtual server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Add virtual server for VLAN test
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+  register: result
+
+- name: Assert Add virtual server for VLAN test
+  assert:
+    that:
+      - result is changed
+
+- name: Set VLAN on virtual server
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+    enabled_vlans: "{{ enabled_vlans }}"
+  register: result
+
+- name: Assert Set VLAN on virtual server
+  assert:
+    that:
+      - result is changed
+
+- name: Set VLAN on virtual server - Idempotent check
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+    enabled_vlans: "{{ enabled_vlans }}"
+  register: result
+
+- name: Assert Set VLAN on virtual server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set ALL VLAN on virtual server
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+    enabled_vlans: ALL
+  register: result
+
+- name: Assert Set ALL VLAN on virtual server
+  assert:
+    that:
+      - result is changed
+
+- name: Set ALL VLAN on virtual server - Idempotent check
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles1 }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+    enabled_vlans: ALL
+  register: result
+
+- name: Assert Set ALL VLAN on virtual server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set some profiles on virtual server pre-12.1
+  bigip_virtual_server:
+    profiles: "{{ vs_profiles3 }}"
+    name: "{{ vs_name }}"
+  register: result
+  when: system_info.product_information.product_version < "12.1.0"
+
+- name: Assert Set some profiles on virtual server pre-12.1
+  assert:
+    that:
+      - result is changed
+  when: system_info.product_information.product_version < "12.1.0"
+
+- name: Set some profiles on virtual server
+  bigip_virtual_server:
+    profiles: "{{ vs_profiles2 }}"
+    name: "{{ vs_name }}"
+  register: result
+  when: system_info.product_information.product_version >= "12.1.0"
+
+- name: Assert Set some profiles on virtual server
+  assert:
+    that:
+      - result is changed
+  when: system_info.product_information.product_version >= "12.1.0"
+
+- name: Set less profiles on virtual server
+  bigip_virtual_server:
+    profiles: "{{ vs_profiles1 }}"
+    name: "{{ vs_name }}"
+  register: result
+
+- name: Assert Set less profiles on virtual server
+  assert:
+    that:
+      - result is changed
+
+- name: Set less profiles on virtual server - Idempotent check
+  bigip_virtual_server:
+    profiles: "{{ vs_profiles1 }}"
+    name: "{{ vs_name }}"
+  register: result
+
+- name: Assert Set less profiles on virtual server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete VLAN virtual server
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete VLAN virtual server
+  assert:
+    that:
+      - result is changed
+
+- name: Add virtual server (FastHTTP)
+  bigip_virtual_server:
+    all_profiles: "{{ vs_profiles_fasthttp }}"
+    description: "{{ vs_description }}"
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    snat: "{{ vs_snat1 }}"
+    state: present
+  register: result
+
+- name: Remove virtual server (FastHTTP)
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    state: absent
+  register: result
+
+- name: Add virtual server for policies tests
+  bigip_virtual_server:
+    destination: "{{ node_host }}"
+    name: "{{ vs_name }}"
+    port: "{{ vs_port1 }}"
+    profiles:
+      - http
+
+- name: Add policies to virtual
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    policies:
+      - policy1
+      - policy2
+  register: result
+
+- name: Assert Add policies to virtual
+  assert:
+    that:
+      - result is changed
+
+- name: Add policies to virtual - Idempotent check
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    policies:
+      - policy1
+      - policy2
+  register: result
+
+- name: Assert Add policies to virtual - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove policies from virtual
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    policies: ""
+  register: result
+
+- name: Assert Remove policies from virtual
+  assert:
+    that:
+      - result is changed
+
+- name: Remove policies from virtual - Idempotent check
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    policies: ""
+  register: result
+
+- name: Assert Remove policies from virtual - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove virtual server for policies tests
+  bigip_virtual_server:
+    name: "{{ vs_name }}"
+    state: absent
+
+
+
+
+- import_tasks: teardown.yaml
+
+# Tests for different issues filed on Github
+- import_tasks: issue-00032.yaml
+  tags: issue-00032
+
+- import_tasks: issue-00038.yaml
+  tags: issue-00038
+
+- import_tasks: issue-00044.yaml
+  tags: issue-00044
+
+- import_tasks: issue-00053.yaml
+  tags: issue-00053
+
+- import_tasks: issue-00057.yaml
+  tags: issue-00057
+
+- import_tasks: issue-00059.yaml
+  tags: issue-00059
+
+- import_tasks: issue-00093.yaml
+  tags: issue-00093
+
+- import_tasks: issue-00101.yaml
+  tags: issue-00101
+
+- import_tasks: issue-00205.yaml
+  tags: issue-00205
+
+- import_tasks: issue-00385.yaml
+  tags: issue-00385
+
+- import_tasks: issue-00402.yaml
+  tags: issue-00402
+
+- import_tasks: issue-00403.yaml
+  tags: issue-00403
+
+- import_tasks: issue-00408.yaml
+  tags: issue-00408
+
+- import_tasks: issue-00419.yaml
+  tags: issue-00419
+
+- import_tasks: issue-00454.yaml
+  tags: issue-00454
+
+- import_tasks: issue-00456.yaml
+  tags: issue-00456
+
+- import_tasks: issue-00460.yaml
+  tags: issue-00460
+
+- import_tasks: issue-00483.yaml
+  tags: issue-00483
+
+- import_tasks: issue-00511.yaml
+  tags: issue-00511
+
+- import_tasks: issue-00515.yaml
+  tags: issue-00515
+
+- import_tasks: issue-00518.yaml
+  tags: issue-00518
+
+- import_tasks: issue-00519.yaml
+  tags: issue-00519
+
+- import_tasks: issue-00520.yaml
+  tags: issue-00520
+
+- import_tasks: issue-00521.yaml
+  tags: issue-00521
+
+- import_tasks: issue-00523.yaml
+  tags: issue-00523
+
+- import_tasks: issue-00569.yaml
+  tags: issue-00569
+
+# Tests for different pull requests filed on Github
+- import_tasks: pr-03158.yaml
+  tags: pr-03158

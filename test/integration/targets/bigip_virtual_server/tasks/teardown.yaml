@@ -1,0 +1,14 @@
+---
+
+- name: Removed published policies
+  bigip_policy:
+    name: "{{ item }}"
+    state: absent
+    rules:
+      - rule1
+      - rule2
+      - rule3
+  loop:
+    - policy1
+    - policy2
+    - policy3

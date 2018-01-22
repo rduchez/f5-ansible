@@ -1,0 +1,80 @@
+---
+
+- name: Issue 00362 - Include issue variables
+  include_vars:
+    file: issue-00362.yaml
+
+- name: Issue 00362 - Create partition
+  bigip_partition:
+    name: "{{ f5_partition }}"
+
+- name: Issue 00362 - Add pool
+  bigip_pool:
+    state: present
+    monitor_type: "{{ f5_pool_monitor_type }}"
+    monitors: "{{ f5_pool_monitors }}"
+    partition: "{{ f5_partition }}"
+    name: "{{ f5_pool_name }}"
+  register: result
+
+- name: Issue 00362 - Assert Add Pool
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00362 - Add pool - Idempotent check
+  bigip_pool:
+    state: present
+    monitor_type: "{{ f5_pool_monitor_type }}"
+    monitors: "{{ f5_pool_monitors }}"
+    partition: "{{ f5_partition }}"
+    name: "{{ f5_pool_name }}"
+  register: result
+
+- name: Issue 00362 - Assert Add Pool - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00362 - Remove pool
+  bigip_pool:
+    name: "{{ f5_pool_name }}"
+    partition: "{{ f5_partition }}"
+    state: absent
+
+- name: Issue 00362 - Add pool without monitors
+  bigip_pool:
+    state: present
+    partition: "{{ f5_partition }}"
+    name: "{{ f5_pool_name }}"
+  register: result
+
+- name: Issue 00362 - Assert Add Pool without monitors
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00362 - Set monitors on pool
+  bigip_pool:
+    state: present
+    monitor_type: "{{ f5_pool_monitor_type }}"
+    monitors: "{{ f5_pool_monitors }}"
+    partition: "{{ f5_partition }}"
+    name: "{{ f5_pool_name }}"
+  register: result
+
+- name: Issue 00362 - Assert Set monitors on pool
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00362 - Remove pool
+  bigip_pool:
+    name: "{{ f5_pool_name }}"
+    partition: "{{ f5_partition }}"
+    state: absent
+
+- name: Issue 00362 - Remove partition
+  bigip_partition:
+    name: "{{ f5_partition }}"
+    state: absent

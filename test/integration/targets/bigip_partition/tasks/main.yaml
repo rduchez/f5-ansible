@@ -1,0 +1,82 @@
+---
+
+- import_tasks: setup.yaml
+
+- name: Create partition
+  bigip_partition:
+    name: "{{ partition }}"
+    route_domain: "{{ route_domain1 }}"
+  register: result
+
+- name: Assert Create partition
+  assert:
+    that:
+      - result is changed
+
+- name: Create partition - Idempotent check
+  bigip_partition:
+    name: "{{ partition }}"
+    route_domain: "{{ route_domain1 }}"
+  register: result
+
+- name: Assert Create partition - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change partition description
+  bigip_partition:
+    description: "{{ description }}"
+    name: "{{ partition }}"
+  register: result
+
+- name: Assert Change partition description
+  assert:
+    that:
+      - result is changed
+
+- name: Change partition description - Idempotent check
+  bigip_partition:
+    description: "{{ description }}"
+    name: "{{ partition }}"
+  register: result
+
+- name: Assert Change partition description - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Reset route domain
+  bigip_partition:
+    name: "{{ partition }}"
+    route_domain: "{{ route_domain_default }}"
+  register: result
+
+- name: Assert Reset route domain
+  assert:
+    that:
+      - result is changed
+
+- name: Delete partition
+  bigip_partition:
+    name: "{{ partition }}"
+    state: absent
+  register: result
+
+- name: Assert Delete partition
+  assert:
+    that:
+      - result is changed
+
+- name: Delete partition - Idempotent check
+  bigip_partition:
+    name: "{{ partition }}"
+    state: absent
+  register: result
+
+- name: Assert Delete partition - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- import_tasks: teardown.yaml

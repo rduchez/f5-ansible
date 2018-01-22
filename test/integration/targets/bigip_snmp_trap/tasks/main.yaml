@@ -1,0 +1,12 @@
+---
+
+- name: Collect BIG-IP facts
+  bigip_facts:
+    include: system_info
+  register: result
+
+- import_tasks: v12.0.0.yaml
+  when: system_info.product_information.product_version < "12.1.0"
+
+- import_tasks: post-v12.yaml
+  when: system_info.product_information.product_version >= "12.1.0"

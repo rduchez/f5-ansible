@@ -1,0 +1,20 @@
+---
+
+- name: Remove Self IPs
+  bigip_selfip:
+    name: "{{ item }}"
+    state: absent
+  register: result
+  loop:
+    - net1
+    - net2
+
+- name: Remove VLANs
+  bigip_vlan:
+    name: "{{ item }}"
+    state: absent
+  register: result
+  loop:
+    - net1
+    - net2
+    - vlan1

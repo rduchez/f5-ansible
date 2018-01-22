@@ -1,0 +1,23 @@
+---
+
+- name: Collect BIG-IP facts
+  bigip_facts:
+    include: system_info
+  register: result
+
+- name: Create published policies
+  bigip_policy:
+    name: "{{ item }}"
+    state: present
+    rules:
+      - rule1
+      - rule2
+      - rule3
+  loop:
+    - policy1
+    - policy2
+    - policy3
+
+- name: Create VLANs
+  bigip_vlan:
+    name: "{{ enabled_vlans }}"

@@ -1,0 +1,103 @@
+---
+
+- name: Import a cert
+  bigip_ssl_certificate:
+    content: "{{ lookup('file', 'cert1.crt') }}"
+    name: bigip_ssl_cert1
+    state: present
+  register: result
+
+- name: Import a key, no passphrase on private key
+  bigip_ssl_key:
+    content: "{{ lookup('file', 'cert1.key') }}"
+    name: bigip_ssl_key1
+    state: present
+  register: result
+
+- name: Set cert and key but not chain
+  bigip_profile_client_ssl:
+    name: foo
+    cert_key_chain:
+      - cert: /Common/bigip_ssl_cert1.crt
+        key: /Common/bigip_ssl_key1.key
+  register: result
+
+- name: Assert Set cert and key but not chain
+  assert:
+    that:
+      - result is changed
+
+- name: Set cert and key but not chain - Idempotent check
+  bigip_profile_client_ssl:
+    name: foo
+    cert_key_chain:
+      - cert: /Common/bigip_ssl_cert1.crt
+        key: /Common/bigip_ssl_key1.key
+  register: result
+
+- name: Assert Set cert and key but not chain - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set cert, key, and chain
+  bigip_profile_client_ssl:
+    name: foo
+    cert_key_chain:
+      - cert: bigip_ssl_cert1
+        key: bigip_ssl_key1
+        chain: bigip_ssl_cert1
+  register: result
+
+- name: Assert Set cert, key, and chain
+  assert:
+    that:
+      - result is changed
+
+- name: Set cert, key, and chain - Idempotent check
+  bigip_profile_client_ssl:
+    name: foo
+    cert_key_chain:
+      - cert: bigip_ssl_cert1
+        key: bigip_ssl_key1
+        chain: bigip_ssl_cert1
+  register: result
+
+- name: Assert Set cert, key, and chain - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove profile
+  bigip_profile_client_ssl:
+    name: foo
+    state: absent
+  register: result
+
+- name: Assert remove profile
+  assert:
+    that:
+      - result is changed
+
+- name: Remove profile - Idempotent check
+  bigip_profile_client_ssl:
+    name: foo
+    state: absent
+  register: result
+
+- name: Assert Remove profile - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove cert 
+  bigip_ssl_certificate:
+    name: bigip_ssl_cert1
+    state: absent
+  register: result
+
+- name: Remove key
+  bigip_ssl_key:
+    name: bigip_ssl_key1
+    state: absent
+  register: result

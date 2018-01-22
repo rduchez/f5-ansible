@@ -1,0 +1,15 @@
+---
+
+- name: Fetch username credential
+  bigip_user_facts:
+      username_credential: "{{ username_credential }}"
+  register: result
+
+- name: Assert Fetch username credential
+  assert:
+      that:
+          - result is changed
+
+- name: Print the name
+  debug:
+      var: bigip['username_credential']

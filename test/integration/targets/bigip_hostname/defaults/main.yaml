@@ -1,0 +1,4 @@
+---
+
+valid_hostname: foo.local.com
+invalid_hostname: foo

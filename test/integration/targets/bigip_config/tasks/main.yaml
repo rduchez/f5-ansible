@@ -1,0 +1,40 @@
+---
+
+# The usage of this module is not idempotent because the supported
+# functionality is all executable. Therefore, you will find no
+# idempotent tests for this module
+
+- name: Save the running BIG-IP configuration to disk
+  bigip_config:
+    save: True
+  register: result
+
+- name: Reset device
+  bigip_config:
+    reset: True
+    save: True
+  register: result
+
+- name: Reset device, load new running configuration, save it
+  bigip_config:
+    reset: True
+    save: True
+    merge_content: "{{ lookup('file', 'bigip.scf') }}"
+  register: result
+
+- name: Ensure virtual server description is same as in SCF file
+  bigip_virtual_server:
+    description: my description
+    destination: 10.10.10.10
+    name: bar10
+    port: 80
+    state: present
+  register: result
+
+- name: Assert Ensure virtual server description is same as in SCF file
+  assert:
+    that:
+      - result is not changed
+
+- import_tasks: issue-00549.yaml
+  tags: issue-00549

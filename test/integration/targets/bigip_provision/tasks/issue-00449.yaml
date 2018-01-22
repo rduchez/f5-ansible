@@ -1,0 +1,28 @@
+---
+
+- name: Issue 00449 - Provision minimum GTM
+  bigip_provision:
+    module: gtm
+    level: minimum
+  register: result
+
+- name: Issue 00449 - Assert Provision minimum GTM
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00449 - Provision minimum GTM - Idempotent check
+  bigip_provision:
+    module: gtm
+    level: minimum
+  register: result
+
+- name: Issue 00449 - Assert Provision minimum GTM - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00449 - De-provision GTM
+  bigip_provision:
+    module: gtm
+    state: absent

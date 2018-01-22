@@ -1,0 +1,65 @@
+---
+
+- name: Issue 00398 - Include issue variables
+  include_vars:
+    file: issue-00398.yaml
+
+- name: Issue 00398 - Import a key
+  bigip_ssl_key:
+    content: "{{ lookup('file', 'cert1.key') }}"
+    name: "{{ key }}"
+    state: present
+  register: result
+
+- name: Issue 00398 - Import a certificate
+  bigip_ssl_certificate:
+    cert_content: "{{ lookup('file', 'cert1.crt') }}"
+    name: "{{ cert }}"
+    state: present
+  register: result
+
+- name: Issue 00398 - Create a client SSL profile with a cert/key/specific ciphers
+  bigip_profile_client_ssl:
+    state: present
+    ciphers: "!SSLv3:!SSLv2:ECDHE+AES-GCM+SHA256:ECDHE-RSA-AES128-CBC-SHA"
+    name: my_profile
+    cert_key_chain:
+      - cert: "{{ cert }}"
+        key: "{{ key }}"
+  register: result
+
+- name: Issue 00398 - Assert Create a client SSL profile with a cert/key/specific ciphers
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00398 - Create a client SSL profile with a cert/key/specific ciphers - Idempotent check
+  bigip_profile_client_ssl:
+    state: present
+    ciphers: "!SSLv3:!SSLv2:ECDHE+AES-GCM+SHA256:ECDHE-RSA-AES128-CBC-SHA"
+    name: my_profile
+    cert_key_chain:
+      - cert: "{{ cert }}"
+        key: "{{ key }}"
+  register: result
+
+- name: Issue 00398 - Assert Create a client SSL profile with a cert/key/specific ciphers - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00398 - Remove client SSL profile
+  bigip_profile_client_ssl:
+    name: my_profile
+    state: absent
+
+- name: Issue 00398 - Remove certificate
+  bigip_ssl_certificate:
+    name: "{{ cert }}"
+    state: absent
+
+- name: Isue 00398 - Remove key
+  bigip_ssl_key:
+    name: "{{ key }}"
+    state: absent
+ 

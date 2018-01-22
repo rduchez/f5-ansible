@@ -1,0 +1,171 @@
+---
+
+- name: Create wide IP - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Create wide IP - Type NAPTR
+  assert:
+    that:
+      - result is changed
+
+- name: Create wide IP - Type NAPTR - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Create wide IP - Type NAPTR - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - ratio - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method2 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - ratio - Type NAPTR
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - ratio - Type NAPTR - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method2 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - ratio - Type NAPTR - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - topology - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method3 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - topology - Type NAPTR
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - topology - Type NAPTR - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method3 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - topology - Type NAPTR - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - global availability - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method4 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - global availability - Type NAPTR
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - global availability - Type NAPTR - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method4 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - global availability - Type NAPTR - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 1 - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method1 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 1 - Type NAPTR
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 2 - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method2 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 2 - Type NAPTR
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 3 - Type NAPTR
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method3 }}"
+    state: present
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 3 - Type NAPTR
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete wide IP - Type NAPTR
+  bigip_gtm_wide_ip:
+    state: absent
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Delete wide IP - Type NAPTR
+  assert:
+    that:
+      - result is changed
+
+- name: Delete wide IP - Type NAPTR - Idempotent check
+  bigip_gtm_wide_ip:
+    state: absent
+    type: naptr
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Delete wide IP - Type NAPTR - Idempotent check
+  assert:
+    that:
+      - result is not changed

@@ -1,0 +1,159 @@
+---
+
+- name: Create pool
+  bigip_pool:
+    lb_method: "{{ pool_lb_method }}"
+    name: "{{ pool_name }}"
+    state: present
+  register: result
+
+- name: Assert Create pool
+  assert:
+    that:
+      - result is changed
+
+- name: Create pool - Idempotent check
+  bigip_pool:
+    lb_method: "{{ pool_lb_method }}"
+    name: "{{ pool_name }}"
+    state: present
+  register: result
+
+- name: Assert Create pool - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- include_tasks: change-pool-lb-method.yaml
+  loop: "{{ pool_lb_method_alt }}"
+
+- name: Change pool reselect_tries
+  bigip_pool:
+    name: "{{ pool_name }}"
+    reselect_tries: "{{ pool_reselect_tries }}"
+    state: present
+  register: result
+
+- name: Assert Change pool reselect_tries
+  assert:
+    that:
+      - result is changed
+
+- name: Delete pool
+  bigip_pool:
+    name: "{{ pool_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete pool
+  assert:
+    that:
+      - result is changed
+
+- name: Delete pool - Idempotent check
+  bigip_pool:
+    name: "{{ pool_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete pool - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Create pool with description
+  bigip_pool:
+    description: "{{ pool_description_1 }}"
+    lb_method: "{{ pool_lb_method }}"
+    name: "{{ pool_name }}"
+    state: present
+  register: result
+
+- name: Assert Create pool with description
+  assert:
+    that:
+      - result is changed
+
+- name: Create pool with description - Idempotent check
+  bigip_pool:
+    description: "{{ pool_description_1 }}"
+    lb_method: "{{ pool_lb_method }}"
+    name: "{{ pool_name }}"
+    state: present
+  register: result
+
+- name: Assert Create pool with description - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change pool description
+  bigip_pool:
+    description: "{{ pool_description_2 }}"
+    lb_method: "{{ pool_lb_method }}"
+    name: "{{ pool_name }}"
+    state: present
+  register: result
+
+- name: Assert Change pool description
+  assert:
+    that:
+      - result is changed
+
+- name: Change pool description - Idempotent check
+  bigip_pool:
+    description: "{{ pool_description_2 }}"
+    lb_method: "{{ pool_lb_method }}"
+    name: "{{ pool_name }}"
+    state: present
+  register: result
+
+- name: Assert Change pool description - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete pool with description
+  bigip_pool:
+    description: "{{ pool_description_2 }}"
+    name: "{{ pool_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete pool with description
+  assert:
+    that:
+      - result is changed
+
+- name: Delete pool with description - Idempotent check
+  bigip_pool:
+    description: "{{ pool_description_2 }}"
+    name: "{{ pool_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete pool with description - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- import_tasks: issue-00331.yaml
+  tags: issue-00331
+
+- import_tasks: issue-00340.yaml
+  tags: issue-00340
+
+- import_tasks: issue-00341.yaml
+  tags: issue-00341
+
+- import_tasks: issue-00348.yaml
+  tags: issue-00348
+
+- import_tasks: issue-00362.yaml
+  tags: issue-00362
+
+- import_tasks: issue-00456.yaml
+  tags: issue-00456
+
+- import_tasks: issue-00572.yaml
+  tags: issue-00572

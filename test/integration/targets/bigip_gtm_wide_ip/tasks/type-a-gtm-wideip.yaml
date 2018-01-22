@@ -1,0 +1,223 @@
+---
+
+- name: Create wide IP - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Create wide IP - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Create wide IP - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Create wide IP - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Disable wide IP - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: disabled
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Disable wide IP - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Disable wide IP - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: disabled
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Disable wide IP - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable wide IP - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: enabled
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Enable wide IP - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Enable wide IP - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method1 }}"
+    state: enabled
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Enable wide IP - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - ratio - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method2 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - ratio - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - ratio - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method2 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - ratio - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - topology - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method3 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - topology - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - topology - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method3 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - topology - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, valid - global availability - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method4 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - global availability - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Set wide IP LB method, valid - global availability - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    lb_method: "{{ valid_lb_method4 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Set wide IP LB method, valid - global availability - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 1 - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method1 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 1 - Type A
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 2 - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method2 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 2 - Type A
+  assert:
+    that:
+      - result is not changed
+
+- name: Set wide IP LB method, invalid 3 - Type A
+  bigip_gtm_wide_ip:
+    lb_method: "{{ invalid_lb_method3 }}"
+    state: present
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+  ignore_errors: true
+
+- name: Assert Set wide IP LB method, invalid 3 - Type A
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete wide IP - Type A
+  bigip_gtm_wide_ip:
+    state: absent
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Delete wide IP - Type A
+  assert:
+    that:
+      - result is changed
+
+- name: Delete wide IP - Type A - Idempotent check
+  bigip_gtm_wide_ip:
+    state: absent
+    type: a
+    wide_ip: "{{ wide_ip1 }}"
+  register: result
+
+- name: Assert Delete wide IP - Type A - Idempotent check
+  assert:
+    that:
+      - result is not changed

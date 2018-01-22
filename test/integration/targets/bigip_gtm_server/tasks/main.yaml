@@ -1,0 +1,460 @@
+---
+
+- import_tasks: setup.yaml
+
+- name: Create GTM server
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        address: 1.1.1.1
+        translation: 2.2.2.2
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Create GTM server
+  assert:
+    that:
+      - result is changed
+
+- name: Create GTM server - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        address: 1.1.1.1
+        translation: 2.2.2.2
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Create GTM server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Update device using single address
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        address: 2.2.2.2
+        translation: 1.1.1.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Update device using single address
+  assert:
+    that:
+      - result is changed
+
+- name: Update device using single address - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        address: 2.2.2.2
+        translation: 1.1.1.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Update device using single address - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Update device using multiple addresses
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.10
+          - address: 4.4.4.2
+            translation: 1.1.1.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Update device using multiple addresses
+  assert:
+    that:
+      - result is changed
+
+- name: Update device using multiple addresses - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.10
+          - address: 4.4.4.2
+            translation: 1.1.1.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Update device using multiple addresses - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Update change multiple addresses
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.10
+          - address: 5.5.5.2
+            translation: 10.10.10.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Update change multiple addresses
+  assert:
+    that:
+      - result is changed
+
+- name: Update change multiple addresses - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.10
+          - address: 5.5.5.2
+            translation: 10.10.10.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Update change multiple addresses - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove GTM server
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: absent
+  register: result
+
+- name: Assert Remove GTM server
+  assert:
+    that:
+      - result is changed
+
+- name: Remove GTM server - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: absent
+  register: result
+
+- name: Assert Remove GTM server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Create server with multiple addresses
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.10
+          - address: 5.5.5.2
+            translation: 10.10.10.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Create server with multiple addresses
+  assert:
+    that:
+      - result is changed
+
+- name: Create server with multiple addresses - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        addresses:
+          - address: 4.4.4.1
+            translation: 192.168.14.10
+          - address: 5.5.5.2
+            translation: 10.10.10.1
+    datacenter: "{{ dc_name1 }}"
+    state: present
+  register: result
+
+- name: Assert Create server with multiple addresses - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change datacenter
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    datacenter: "{{ dc_name2 }}"
+    state: present
+  register: result
+
+- name: Assert Change datacenter
+  assert:
+    that:
+      - result is changed
+
+- name: Change datacenter - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    datacenter: "{{ dc_name2 }}"
+    state: present
+  register: result
+
+- name: Assert Change datacenter - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Disable server
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: disabled
+  register: result
+
+- name: Assert Disable server
+  assert:
+    that:
+      - result is changed
+
+- name: Disable server - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: disabled
+  register: result
+
+- name: Assert Disable server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable server
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: enabled
+  register: result
+
+- name: Assert Enable server
+  assert:
+    that:
+      - result is changed
+
+- name: Enable server - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: enabled
+  register: result
+
+- name: Assert Enable server - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable virtual server discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: enabled
+  register: result
+
+- name: Assert Enable virtual server discovery
+  assert:
+    that:
+      - result is changed
+
+- name: Enable virtual server discovery - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: enabled
+  register: result
+
+- name: Assert Enable virtual server discovery - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable-no-delete virtual server discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: enabled-no-delete
+  register: result
+
+- name: Assert Enable-no-delete virtual server discovery
+  assert:
+    that:
+      - result is changed
+
+- name: Enable-no-delete virtual server discovery - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: enabled-no-delete
+  register: result
+
+- name: Assert Enable-no-delete virtual server discovery - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Disable virtual server discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: disabled
+  register: result
+
+- name: Assert Disable virtual server discovery
+  assert:
+    that:
+      - result is changed
+
+- name: Disable virtual server discovery - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: disabled
+  register: result
+
+- name: Assert Disable virtual server discovery - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable link discovery - virtual server discovery disabled
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: enabled
+  failed_when: "'Virtual server discovery must be enabled' not in result.msg"
+  register: result
+
+- name: Assert Enable link discovery - virtual server discovery disabled
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable-no-delete link discovery - virtual server discovery disabled
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: enabled-no-delete
+  failed_when: "'Virtual server discovery must be enabled' not in result.msg"
+  register: result
+
+- name: Assert Enable-no-delete link discovery - virtual server discovery disabled
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable virtual server discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    virtual_server_discovery: enabled
+  register: result
+
+- name: Enable link discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: enabled
+  register: result
+
+- name: Assert Enable link discovery
+  assert:
+    that:
+      - result is changed
+
+- name: Enable link discovery - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: enabled
+  register: result
+
+- name: Assert Enable link discovery - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Enable-no-delete link discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: enabled-no-delete
+  register: result
+
+- name: Assert Enable-no-delete link discovery
+  assert:
+    that:
+      - result is changed
+
+- name: Enable-no-delete link discovery - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: enabled-no-delete
+  register: result
+
+- name: Assert Enable-no-delete link discovery - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Disable link discovery
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: disabled
+  register: result
+
+- name: Assert Disasble link discovery
+  assert:
+    that:
+      - result is changed
+
+- name: Disable link discovery - Idempotent check
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    link_discovery: disabled
+  register: result
+
+- name: Assert Disable link discovery - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- include_tasks: server-types.yaml
+  loop:
+    - alteon-ace-director
+    - cisco-css
+    - cisco-server-load-balancer
+    - generic-host
+    - radware-wsd
+    - windows-nt-4.0
+    - bigip
+    - cisco-local-director-v2
+    - extreme
+    - generic-load-balancer
+    - sun-solaris
+    - cacheflow
+    - cisco-local-director-v3
+    - foundry-server-iron
+    - netapp
+    - windows-2000-server
+
+- name: Remove GTM server with multiple addresses
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: absent
+  register: result
+
+- import_tasks: teardown.yaml

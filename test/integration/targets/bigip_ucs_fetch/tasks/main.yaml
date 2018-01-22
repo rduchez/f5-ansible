@@ -1,0 +1,109 @@
+---
+
+- name: Remove backups
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/tmp/{{ ucs_missing }}"
+    - "/tmp/{{ ucs_name_1 }}"
+    - "/tmp/{{ ucs_name }}"
+
+- name: Create a UCS
+  bigip_ucs_fetch:
+    dest: "/tmp/{{ ucs_name }}"
+    src: "{{ ucs_name }}"
+  register: result
+
+- name: Assert Create a UCS
+  assert:
+    that:
+      - result is changed
+
+- name: Create the same UCS, default force
+  bigip_ucs_fetch:
+    dest: "/tmp/{{ ucs_name }}"
+    src: "{{ ucs_name }}"
+  register: result
+
+- name: Assert Create the same UCS, default force
+  assert:
+    that:
+      - result is changed
+
+- name: Create a UCS, do not force
+  bigip_ucs_fetch:
+    dest: "/tmp/{{ ucs_name_1 }}"
+    force: no
+    src: "{{ ucs_name }}"
+  register: result
+
+- name: Assert Create a UCS, do not force
+  assert:
+    that:
+      - result is changed
+
+- name: Create a UCS, leave a backup
+  bigip_ucs_fetch:
+    backup: yes
+    dest: "/tmp/{{ ucs_name_1 }}"
+    src: "{{ ucs_name }}"
+  register: result
+
+- name: Assert Create a UCS, leave a backup
+  assert:
+    that:
+      - result is changed
+      - "'backup_file' in result"
+
+- name: Remove backup UCS
+  file:
+    path: "{{ result['backup_file'] }}"
+    state: absent
+
+- name: Fetch a missing UCS
+  bigip_ucs_fetch:
+    create_on_missing: no
+    dest: "/tmp/{{ ucs_missing }}"
+    src: "{{ ucs_missing }}"
+  ignore_errors: true
+  register: result
+
+- name: Assert Fetch a missing UCS
+  assert:
+    that:
+      - result is not changed
+
+- name: Error on fetching a missing UCS
+  bigip_ucs_fetch:
+    fail_on_missing: yes
+    dest: "/tmp/{{ ucs_missing }}"
+    src: "{{ ucs_missing }}"
+  ignore_errors: true
+  register: result
+
+- name: Assert Error on fetching a missing UCS
+  assert:
+    that:
+      - result is not changed
+
+- name: Create a UCS with encryption password
+  bigip_ucs_fetch:
+    dest: "/tmp/{{ ucs_missing }}"
+    encryption_password: admin
+    src: "{{ ucs_missing }}"
+  register: result
+
+- name: Assert Create a UCS with encryption password
+  assert:
+    that:
+      - result is changed
+
+- name: Remove backups
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/tmp/{{ ucs_missing }}"
+    - "/tmp/{{ ucs_name_1 }}"
+    - "/tmp/{{ ucs_name }}"

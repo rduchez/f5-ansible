@@ -1,0 +1,112 @@
+---
+
+- name: Issue 00331 - Include issue variables
+  include_vars:
+    file: issue-00331.yaml
+
+- name: Issue 00331 - Creating port 443 Vip with no pool that the proxies will connect to
+  bigip_virtual_server:
+    description: Vip that the proxy will connect to
+    destination: "{{ vip_ip }}"
+    name: "{{ vip_name }}"
+    port: 443
+    snat: Automap
+    all_profiles:
+      - "{{ http_profile }}"
+      - "{{ clientssl }}"
+  register: result
+
+- name: Issue 00331 - Assert Creating port 443 Vip with no pool that the proxies will connect to
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00331 - Creating port 443 Vip with no pool that the proxies will connect to - Idempotent check
+  bigip_virtual_server:
+    description: Vip that the proxy will connect to
+    destination: "{{ vip_ip }}"
+    name: "{{ vip_name }}"
+    port: 443
+    snat: Automap
+    all_profiles:
+      - "{{ http_profile }}"
+      - "{{ clientssl }}"
+  register: result
+
+- name: Issue 00331 - Assert Creating port 443 Vip with no pool that the proxies will connect to - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00331 - Creating the cloud_pool
+  bigip_pool:
+    lb_method: round-robin
+    name: "{{ cloud_pool }}"
+    monitors: "{{ cloud_http_mon }}"
+    slow_ramp_time: 120
+  register: result
+
+- name: Issue 00331 - Assert Creating the cloud_pool
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00331 - Creating the cloud_pool - Idempotent check
+  bigip_pool:
+    lb_method: round-robin
+    name: "{{ cloud_pool }}"
+    monitors: "{{ cloud_http_mon }}"
+    slow_ramp_time: 120
+  register: result
+
+- name: Issue 00331 - Assert Creating the cloud_pool - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00331 - Creating the cloud vip with pool and no members that the clients will connect to
+  bigip_virtual_server:
+    description: cloud-vip
+    destination: "{{ cloud_vip_ip }}"
+    name: "{{ cloud_vip_name }}"
+    pool: "{{ cloud_pool }}"
+    port: 80
+    snat: Automap
+    all_profiles:
+      - http
+  register: result
+
+- name: Issue 00331 - Assert Creating the cloud vip with pool and no members that the clients will connect to
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00331 - Creating the cloud vip with pool and no members that the clients will connect to - Idempotent check
+  bigip_virtual_server:
+    description: cloud-vip
+    destination: "{{ cloud_vip_ip }}"
+    name: "{{ cloud_vip_name }}"
+    pool: "{{ cloud_pool }}"
+    port: 80
+    snat: Automap
+    all_profiles:
+      - http
+  register: result
+
+- name: Issue 00331 - Assert Creating the cloud vip with pool and no members that the clients will connect to - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00331 - Remove virtual server
+  bigip_virtual_server:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ cloud_vip_name }}"
+    - "{{ vip_name }}"
+
+- name: Issue 00331 - Remove the cloud_pool
+  bigip_pool:
+    name: "{{ cloud_pool }}"
+    state: absent
