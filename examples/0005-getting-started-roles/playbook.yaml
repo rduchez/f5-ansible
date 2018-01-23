@@ -1,0 +1,10 @@
+---
+
+
+
+- name: Create a VIP, pool, pool members and nodes
+  hosts: big-ip01.internal
+  connection: local
+  roles:
+    - vip-creation
+
